@@ -7,6 +7,10 @@
     <script>
         function saveInput() {
             let userInput = document.getElementById("userInput").value;
+            if (!userInput.trim()) {
+                alert("Please enter some text before saving.");
+                return;
+            }
             localStorage.setItem("savedInput", userInput);
             alert("Input saved!");
         }
