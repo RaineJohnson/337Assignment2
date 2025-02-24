@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Input Saver</title>
+    <script>
+        function saveInput() {
+            let userInput = document.getElementById("userInput").value;
+            localStorage.setItem("savedInput", userInput);
+            alert("Input saved!");
+        }
+
+        function loadInput() {
+            let savedInput = localStorage.getItem("savedInput");
+            if (savedInput) {
+                document.getElementById("userInput").value = savedInput;
+            }
+        }
+    </script>
+</head>
+<body onload="loadInput()">
+    <h2>Enter Your Text Below:</h2>
+    <textarea id="userInput" rows="4" cols="50"></textarea>
+    <br>
+    <button onclick="saveInput()">Save</button>
+</body>
+</html>
