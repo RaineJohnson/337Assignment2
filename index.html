@@ -20,7 +20,7 @@
             box-sizing: border-box;
         }
         input {
-            width: 100%;
+            width: calc(100% - 20px); /* Subtracting padding to ensure true centering */
             padding: 10px;
             margin: 10px 0;
             text-align: center;
@@ -54,7 +54,6 @@
     <script>
         let currentOTP = "";
         const secretKey = "800770FF00FF08012";
-
         async function generateOTP() {
             const encoder = new TextEncoder();
             const data = encoder.encode(secretKey + Date.now().toString());
@@ -64,7 +63,6 @@
             currentOTP = hashHex.substring(0, 6);
             document.getElementById("otpDisplay").value = currentOTP;
         }
-
         function verifyOTP() {
             const userOTP = document.getElementById("otpInput").value;
             const result = document.getElementById("result");
