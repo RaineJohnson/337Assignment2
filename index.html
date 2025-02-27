@@ -52,22 +52,23 @@
         <p id="result"></p>
     </div>
     <script>
-        const SECRET_KEY = "800770FF00FF08012"; // Hardcoded secret key
+        let currentOTP = "";
+        const secretKey = "800770FF00FF08012";
 
-        function generateOTP() {
-            const timestamp = Math.floor(Date.now() / 10000); // Changes every 10s
-            const hash = sha256(SECRET_KEY + timestamp);
-            const otp = hash.substring(0, 6); // First 6 hex digits
-            localStorage.setItem("otp", otp); // Store OTP in localStorage
-            document.getElementById("otpDisplay").value = otp;
+        async function generateOTP() {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(secretKey + Date.now().toString());
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+            currentOTP = hashHex.substring(0, 6);
+            document.getElementById("otpDisplay").value = currentOTP;
         }
 
         function verifyOTP() {
             const userOTP = document.getElementById("otpInput").value;
-            const storedOTP = localStorage.getItem("otp");
             const result = document.getElementById("result");
-
-            if (userOTP === storedOTP) {
+            if (userOTP === currentOTP) {
                 result.textContent = "Access Granted";
                 result.style.color = "green";
             } else {
@@ -75,15 +76,6 @@
                 result.style.color = "red";
             }
         }
-
-        // SHA-256 Hash Function (runs in the browser)
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-        }
     </script>
 </body>
 </html>
-
