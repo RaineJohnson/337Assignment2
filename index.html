@@ -3,34 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Input Saver</title>
+    <title>OTP Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>OTP Generator</h2>
+        <input type="text" id="otpDisplay" readonly>
+        <button onclick="generateOTP()">Generate OTP</button>
+    </div>
+    <div class="container">
+        <h2>Verify OTP</h2>
+        <input type="text" id="otpInput" placeholder="Enter OTP">
+        <button onclick="verifyOTP()">Submit</button>
+        <p id="result"></p>
+    </div>
     <script>
-        function saveInput() {
-            let userInput = document.getElementById("userInput").value;
-            if (!userInput.trim()) {
-                alert("Please enter some text before saving.");
-                return;
-            }
-            localStorage.setItem("savedInput", userInput);
-            alert("Input saved!");
+        let currentOTP = "";
+        const secretKey = "800770FF00FF08012";
+
+        async function generateOTP() {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(secretKey + Date.now().toString());
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+            currentOTP = hashHex.substring(0, 6);
+            document.getElementById("otpDisplay").value = currentOTP;
         }
 
-        function loadInput() {
-            let savedInput = localStorage.getItem("savedInput");
-            if (savedInput) {
-                document.getElementById("userInput").value = savedInput;
+        function verifyOTP() {
+            const userOTP = document.getElementById("otpInput").value;
+            const result = document.getElementById("result");
+            if (userOTP === currentOTP) {
+                result.textContent = "Access Granted";
+                result.style.color = "green";
+            } else {
+                result.textContent = "Invalid OTP";
+                result.style.color = "red";
             }
         }
     </script>
-</head>
-<body onload="loadInput()">
-    <h2>Enter Your One-Time Password Below:</h2>
-    <textarea id="userInput" rows="1" cols="50"></textarea>
-    <br>
-    <button id="generateOtpButton">Generate OTP</button>
-    <br>
-    <button onclick="saveInput()">Save</button>
-    <br>
-    <p id="otpDisplay"></p>
 </body>
 </html>
