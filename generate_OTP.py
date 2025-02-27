@@ -14,8 +14,7 @@ def generate_otp(key, num_otps):
     for i in range(num_otps):
         # Hash the previous hash
         sha256_hash = hashlib.sha256(previous_hash.encode())  # Hash the previous hash
-        hash_hex = sha256_hash.hexdigest()  # Get the hexadecimal representation of the hash
-
+        hash_hex = sha256_hash.hexdigest()  # Get alphanumerical full hash from binary
         # Truncate the hash to get the OTP (last 6 hexadecimal digits)
         otp = hash_hex[-OTP_LENGTH:]
 
