@@ -28,8 +28,11 @@ def generate_otp(key, num_otps):
     return otps
 
 
-# Generate 100 OTPs
-num_otps = 100
+# Generate a number of OTPs based on user input
+user_input = input('How many OTPs would you like to generate?: ')
+num_otps = 1
+if user_input.isnumeric():
+    num_otps = int(user_input)
 otp_list = generate_otp(KEY, num_otps)
 
 # Save the OTP list to a JSON file
@@ -37,7 +40,7 @@ with open('otps.json', 'w') as f:
     json.dump(otp_list, f)
 
 # Print the OTPs to the console and confirmation of write to .json file
-print("\nGenerated 100 OTPs:")
+print("\nGenerated {} OTPs:".format(num_otps))
 for i, otp in enumerate(otp_list, start=1):
     print("OTP {}: {}".format(i, otp))
 
