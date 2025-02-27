@@ -36,7 +36,7 @@ otp_list = generate_otp(KEY, num_otps)
 with open('otps.json', 'w') as f:
     json.dump(otp_list, f)
 
-# Print the OTPs to the console (using string formatting compatible with Python 2.8)
+# Print the OTPs to the console and confirmation of write to .json file
 print("\nGenerated 100 OTPs:")
 for i, otp in enumerate(otp_list, start=1):
     print("OTP {}: {}".format(i, otp))
